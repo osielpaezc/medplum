@@ -1,0 +1,16 @@
+.layout-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 1.5rem;
+  background-color: var(--content-bg);
+}
+
+.left-footer {
+  background-color: var(--topbar-sticky-bg);
+  font-size: x-small;
+}
+
+.left-footer-copyright a {
+  color: #ed2127;
+}
