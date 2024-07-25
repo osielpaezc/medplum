@@ -1,0 +1,106 @@
+import { ref, watch, onUnmounted } from 'vue';
+import { SubscriptionEmitter, SubscriptionEventMap, deepEquals } from '@medplum/core';
+import { Bundle, Subscription } from '@medplum/fhirtypes';
+import { useMedplum } from '.';
+
+
+const SUBSCRIPTION_DEBOUNCE_MS = 3000;
+
+export type UseSubscriptionOptions = {
+  subscriptionProps?: Partial<Subscription>;
+};
+
+/**
+ * Creates an in-memory `Subscription` resource with the given criteria on the Medplum server and calls the given callback when an event notification is triggered by a resource interaction over a WebSocket connection.
+ *
+ * Subscriptions created with this hook are lightweight, share a single WebSocket connection, and are automatically untracked and cleaned up when the containing component is no longer mounted.
+ *
+ * @param criteria - The FHIR search criteria to subscribe to.
+ * @param callback - The callback to call when a notification event `Bundle` for this `Subscription` is received.
+ * @param options - Optional options used to configure the created `Subscription`.
+ */
+export function useSubscription(
+  criteria: string,
+  callback: (bundle: Bundle) => void,
+  options?: UseSubscriptionOptions
+): void {
+  const medplum = useMedplum();
+  const emitter = ref<SubscriptionEmitter>();
+  const memoizedOptions = ref(options);
+
+  const listeningRef = ref(false);
+  const unsubTimerRef = ref<ReturnType<typeof setTimeout>>();
+
+  const prevCriteriaRef = ref<string>();
+  const prevMemoizedOptionsRef = ref<UseSubscriptionOptions>();
+
+  const callbackRef = ref(callback);
+
+  watch(
+    () => options,
+    (newOptions) => {
+      if (memoizedOptions.value !== newOptions && !deepEquals(memoizedOptions.value, newOptions)) {
+        memoizedOptions.value = newOptions;
+      }
+    },
+    { immediate: true }
+  );
+
+  watch(
+    () => [criteria, memoizedOptions.value],
+    ([newCriteria, newOptions]) => {
+      if (unsubTimerRef.value) {
+        clearTimeout(unsubTimerRef.value);
+        unsubTimerRef.value = undefined;
+      }
+
+      if (prevCriteriaRef.value !== newCriteria || !deepEquals(prevMemoizedOptionsRef.value, newOptions)) {
+        emitter.value = medplum.subscribeToCriteria(newCriteria, newOptions?.subscriptionProps);
+      }
+
+      prevCriteriaRef.value = newCriteria;
+      prevMemoizedOptionsRef.value = newOptions;
+
+      return () => {
+        unsubTimerRef.value = setTimeout(() => {
+          if (emitter.value) {
+            medplum.unsubscribeFromCriteria(newCriteria, newOptions?.subscriptionProps);
+            emitter.value = undefined;
+          }
+        }, SUBSCRIPTION_DEBOUNCE_MS);
+      };
+    },
+    { immediate: true }
+  );
+
+  const emitterCallback = (event: SubscriptionEventMap['message']) => {
+    callbackRef.value?.(event.payload);
+  };
+
+  watch(
+    () => emitter.value,
+    (newEmitter, oldEmitter) => {
+      if (!newEmitter) return;
+
+      if (!listeningRef.value) {
+        newEmitter.addEventListener('message', emitterCallback);
+        listeningRef.value = true;
+      }
+
+      return () => {
+        if (oldEmitter) {
+          oldEmitter.removeEventListener('message', emitterCallback);
+          listeningRef.value = false;
+        }
+      };
+    },
+    { immediate: true }
+  );
+
+  onUnmounted(() => {
+    if (emitter.value) {
+      medplum.unsubscribeFromCriteria(criteria, memoizedOptions.value?.subscriptionProps);
+      emitter.value = undefined;
+    }
+  });
+}
