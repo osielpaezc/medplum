@@ -4,6 +4,7 @@ import vuetify from 'vite-plugin-vuetify'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  
   app: {
     head: {
       titleTemplate: '%s - NuxtJS Admin Template',
@@ -35,12 +36,15 @@ export default defineNuxtConfig({
     // Private keys are only available on the server
     AUTH_ORIGIN: process.env.AUTH_ORIGIN,
     AUTH_SECRET: process.env.AUTH_SECRET,
+    MedplumClientId: process.env.MEDPLUM_CLIENT_ID,
 
     // Public keys that are exposed to the client.
     public: {
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || '/api',
+      medplumBaseUrl: process.env.MEDPLUM_BASE_URL,  
     },
   },
+
   components: {
     dirs: [{
       path: '@/@core/components',
@@ -69,7 +73,7 @@ export default defineNuxtConfig({
   plugins: [
     '@/plugins/casl/index.ts',
     '@/plugins/vuetify/index.ts',
-    '@/plugins/iconify/index.ts',
+    '@/plugins/iconify/index.ts'
   ],
 
   imports: {
@@ -96,7 +100,7 @@ export default defineNuxtConfig({
           '@styles/*': ['../assets/styles/*'],
           '@validators': ['../@core/utils/validators'],
           '@db/*': ['../server/fake-db/*'],
-          '@api-utils/*': ['../server/utils/*'],
+          '@api-utils/*': ['../server/utils/*']
         },
       },
     },
@@ -128,6 +132,7 @@ export default defineNuxtConfig({
         '@configured-variables': fileURLToPath(new URL('./assets/styles/variables/_template.scss', import.meta.url)),
         '@db': fileURLToPath(new URL('./server/fake-db/', import.meta.url)),
         '@api-utils': fileURLToPath(new URL('./server/utils/', import.meta.url)),
+        '@medplum': fileURLToPath(new URL('./../packages/', import.meta.url)),
       },
     },
 
@@ -147,7 +152,7 @@ export default defineNuxtConfig({
       vuetify({
         styles: {
           configFile: 'assets/styles/variables/_vuetify.scss',
-        },
+        }
       }),
     ],
   },
@@ -167,4 +172,6 @@ export default defineNuxtConfig({
     '@sidebase/nuxt-auth',
     '@pinia/nuxt',
   ],
+
+  compatibilityDate: '2024-07-26',
 })
