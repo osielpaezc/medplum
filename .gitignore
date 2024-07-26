@@ -8,6 +8,8 @@ node_modules/
 
 # Dotenv
 .env
+.env.*
+!.env.example
 
 .failed
 prettier-fmt.err
@@ -62,3 +64,24 @@ medplum-server.tar.gz
 packages/agent/*agent-*-linux*
 packages/agent/sea-prep.blob
 packages/agent/src/upgrader-logs-*.txt
+
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
