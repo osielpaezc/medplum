@@ -7,7 +7,7 @@ import { NuxtAuthHandler } from '#auth'
 // const runtimeConfig = useRuntimeConfig()
 
 export default NuxtAuthHandler({
-  secret: process.env.AUTH_SECRET,
+  secret: useRuntimeConfig().AUTH_SECRET,
   providers: [
 
     // GoogleProvider.default({
