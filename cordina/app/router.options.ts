@@ -15,13 +15,14 @@ const redirects: RouteRecordRaw[] = [
         const { data: sessionData } = useAuth()
 
         const userRole = sessionData.value?.user.role
+        console.log('user data', sessionData.value)
 
         if (userRole === 'admin')
           return { name: 'dashboards-crm' }
         if (userRole === 'client')
           return { name: 'access-control' }
 
-        return { name: 'login', query: to.query }
+        return { name: '/auth/login', query: to.query }
       },
     },
     component: h('div'),

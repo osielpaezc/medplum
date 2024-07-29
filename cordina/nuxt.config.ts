@@ -2,8 +2,21 @@ import { fileURLToPath } from 'node:url'
 import svgLoader from 'vite-svg-loader'
 import vuetify from 'vite-plugin-vuetify'
 
+const isDeployed = (
+  process.env.AUTH_ORIGIN === 'http://localhost:3000'
+  || !process.env.AUTH_ORIGIN
+) ? false : true;
+const deploymentDomain = process.env.AUTH_ORIGIN || 'http://localhost:3000';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+
+  devServer: {
+    https: {
+      key: 'server.key',
+      cert: 'server.crt'
+    }
+  },
   
   app: {
     head: {
@@ -36,6 +49,10 @@ export default defineNuxtConfig({
     // Private keys are only available on the server
     AUTH_ORIGIN: process.env.AUTH_ORIGIN,
     AUTH_SECRET: process.env.AUTH_SECRET,
+    nextAuthSecret: process.env.AUTH_SECRET,
+    auth0ClientId: process.env.AUTH0_CLIENT_ID,
+    auth0ClientSecret: process.env.AUTH0_CLIENT_SECRET,
+    auth0Issuer: process.env.AUTH0_ISSUER,
     MedplumClientId: process.env.MEDPLUM_CLIENT_ID,
 
     // Public keys that are exposed to the client.
@@ -61,13 +78,53 @@ export default defineNuxtConfig({
     }],
   },
 
-  auth: {
-    baseURL: process.env.AUTH_ORIGIN,
-    globalAppMiddleware: false,
-
+  auth: { 
+    isEnabled: true,
+    disableServerSideAuth: false,
+    baseURL: `${process.env.AUTH_ORIGIN}/api/auth`,
     provider: {
       type: 'authjs',
+      trustHost: false,
+      defaultProvider: 'auth0',
+      addDefaultCallbackUrl: false
     },
+    sessionRefresh: {
+        enablePeriodically: true,
+        enableOnWindowFocus: true,
+    }
+
+  // auth: {
+  //   provider: {
+  //     type: 'authjs',
+  //     addDefaultCallbackUrl: false
+  //   },
+  //   // https://sidebase.io/nuxt-auth/v0.6/configuration/nuxt-auth-handler#nuxtauthhandler
+  //   origin: deploymentDomain,
+  //   // https://sidebase.io/nuxt-auth/v0.6/configuration/nuxt-config#module-nuxtconfigts
+  //   baseUrl: `/api/auth`,
+  //   addDefaultCallbackUrl: false,
+  //   globalAppMiddleware: {
+  //     isEnabled: true,
+  //     allow404WithoutAuth: true,
+  //     addDefaultCallbackUrl: false
+  //   },
+  // },
+
+  // auth: {
+  //   provider: {
+  //     type: 'authjs',
+  //     addDefaultCallbackUrl: true
+  //   },
+  //   // https://sidebase.io/nuxt-auth/v0.6/configuration/nuxt-auth-handler#nuxtauthhandler
+  //   origin: deploymentDomain,
+  //   // https://sidebase.io/nuxt-auth/v0.6/configuration/nuxt-config#module-nuxtconfigts
+  //   baseUrl: `/api/auth`,
+  //   addDefaultCallbackUrl: false,
+  //   // globalAppMiddleware: {
+  //   //   isEnabled: true,
+  //   //   allow404WithoutAuth: true,
+  //   //   addDefaultCallbackUrl: true
+  //   // },
   },
 
   plugins: [
@@ -170,7 +227,7 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxtjs/device',
     '@sidebase/nuxt-auth',
-    '@pinia/nuxt',
+    '@pinia/nuxt'
   ],
 
   compatibilityDate: '2024-07-26',
