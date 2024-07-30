@@ -86,7 +86,12 @@ export default defineNuxtConfig({
       type: 'authjs',
       trustHost: false,
       defaultProvider: 'auth0',
-      addDefaultCallbackUrl: false
+      addDefaultCallbackUrl: true,
+    },
+    globalAppMiddleware: {
+      isEnabled: false,
+      allow404WithoutAuth: true,
+      addDefaultCallbackUrl: true
     },
     sessionRefresh: {
         enablePeriodically: true,
