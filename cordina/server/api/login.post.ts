@@ -1,8 +1,6 @@
-import { identity } from '@vueuse/core';
 import { jwtDecode } from 'jwt-decode';
 import { DefaultJWT } from 'next-auth/jwt';
 import { NuxtError } from 'nuxt/app';
-import { permission } from 'process';
 
 const { auth0ClientId, auth0ClientSecret, auth0Issuer, auth0Audience } = useRuntimeConfig();
 
@@ -50,6 +48,7 @@ export default defineEventHandler(async (event) => {
 
   const idToken = jwtDecode(auth.id_token) as DefaultJWT;
   const accessToken = jwtDecode(auth.access_token) as DefaultJWT;
+  
   const permissions = accessToken.permissions.map((perm) => {
     const [action, subject] = perm.split(':');
     return { action, subject };
