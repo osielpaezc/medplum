@@ -46,8 +46,8 @@ const errors = ref<Record<string, string | undefined>>({
 const refVForm = ref<VForm>()
 
 const credentials = ref({
-  email: 'admin@demo.com',
-  password: 'admin',
+  email: '',
+  password: '',
 })
 
 const rememberMe = ref(false)
@@ -155,7 +155,7 @@ const onSubmit = () => {
             Please sign-in to your account and start the adventure
           </p>
         </VCardText>
-        <VCardText>
+        <!-- <VCardText>
           <VAlert
             color="primary"
             variant="tonal"
@@ -167,7 +167,7 @@ const onSubmit = () => {
               Client Email: <strong>client@demo.com</strong> / Pass: <strong>client</strong>
             </p>
           </VAlert>
-        </VCardText>
+        </VCardText> -->
 
         <VCardText>
           <VForm
@@ -179,8 +179,8 @@ const onSubmit = () => {
               <VCol cols="12">
                 <VTextField
                   v-model="credentials.email"
-                  label="Email"
-                  placeholder="johndoe@email.com"
+                  label="User"
+                  placeholder="... your account email."
                   type="email"
                   autofocus
                   :rules="[requiredValidator, emailValidator]"

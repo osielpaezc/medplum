@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware(to => {
   if (to.meta.public)
     return
 
-  const { status } = useAuth()
+  const { status, signIn } = useAuth()
   const isLoggedIn = status.value === 'authenticated'
 
   /*

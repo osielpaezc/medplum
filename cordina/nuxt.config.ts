@@ -53,6 +53,7 @@ export default defineNuxtConfig({
     auth0ClientId: process.env.AUTH0_CLIENT_ID,
     auth0ClientSecret: process.env.AUTH0_CLIENT_SECRET,
     auth0Issuer: process.env.AUTH0_ISSUER,
+    auth0Audience: process.env.AUTH0_AUDIENCE,
     MedplumClientId: process.env.MEDPLUM_CLIENT_ID,
 
     // Public keys that are exposed to the client.
@@ -78,25 +79,35 @@ export default defineNuxtConfig({
     }],
   },
 
-  auth: { 
-    isEnabled: true,
-    disableServerSideAuth: false,
-    baseURL: `${process.env.AUTH_ORIGIN}/api/auth`,
+  auth: {
+    baseURL: process.env.AUTH_ORIGIN,
+    globalAppMiddleware: false,
+
     provider: {
       type: 'authjs',
-      trustHost: false,
-      defaultProvider: 'auth0',
-      addDefaultCallbackUrl: true,
     },
-    globalAppMiddleware: {
-      isEnabled: false,
-      allow404WithoutAuth: true,
-      addDefaultCallbackUrl: true
-    },
-    sessionRefresh: {
-        enablePeriodically: true,
-        enableOnWindowFocus: true,
-    }
+  },
+
+
+  // auth: { 
+  //   isEnabled: true,
+  //   disableServerSideAuth: false,
+  //   baseURL: `${process.env.AUTH_ORIGIN}/api/auth`,
+  //   provider: {
+  //     type: 'authjs',
+  //     trustHost: false,
+  //     defaultProvider: 'auth0',
+  //     addDefaultCallbackUrl: true,
+  //   },
+  //   globalAppMiddleware: {
+  //     isEnabled: false,
+  //     allow404WithoutAuth: true,
+  //     addDefaultCallbackUrl: true
+  //   },
+  //   sessionRefresh: {
+  //       enablePeriodically: true,
+  //       enableOnWindowFocus: true,
+  //   }
 
   // auth: {
   //   provider: {
@@ -130,7 +141,7 @@ export default defineNuxtConfig({
   //   //   allow404WithoutAuth: true,
   //   //   addDefaultCallbackUrl: true
   //   // },
-  },
+  //},
 
   plugins: [
     '@/plugins/casl/index.ts',

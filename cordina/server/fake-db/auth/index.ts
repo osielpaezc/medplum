@@ -30,10 +30,9 @@ export const db: DB = {
       id: 1,
       fullName: 'John Doe',
       username: 'johndoe',
-      password: 'admin',
-
+      password: 'Paez780516',
       avatar: avatar1,
-      email: 'admin@demo.com',
+      email: 'osielpaez@yahoo.com',
       role: 'admin',
       abilityRules: [
         {
