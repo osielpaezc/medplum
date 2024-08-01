@@ -10,7 +10,7 @@ import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layo
 
 export const { themeConfig, layoutConfig } = defineThemeConfig({
   app: {
-    title: 'materio',
+    title: 'cordina',
 
     // ❗ if you have SVG logo and want it to adapt according to theme color, you have to apply color as `color: rgb(var(--v-global-theme-primary))`
     logo: h('div', { innerHTML: logo, style: 'line-height:0; color: rgb(var(--v-global-theme-primary))' }),
@@ -66,8 +66,8 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
     chevronDown: { icon: 'ri-arrow-down-s-line' },
     chevronRight: { icon: 'ri-arrow-right-s-line' },
     close: { icon: 'ri-close-line', size: '20' },
-    verticalNavPinned: { icon: 'ri-radio-button-line', size: '20' },
-    verticalNavUnPinned: { icon: 'ri-circle-line', size: '20' },
+    verticalNavPinned: { icon: 'ri-pushpin-2-fill', size: '20' },
+    verticalNavUnPinned: { icon: 'ri-unpin-line', size: '20' },
     sectionTitlePlaceholder: { icon: 'ri-subtract-line' },
   },
 })

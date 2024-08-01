@@ -14,29 +14,32 @@ import NavBarI18n from '@core/components/I18n.vue'
 import { HorizontalNavLayout } from '@layouts'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 </script>
+<style lang="scss" scoped>
+.app-logo-title {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.75rem;
+  text-transform: uppercase;
 
+}
+</style>
 <template>
   <HorizontalNavLayout :nav-items="navItems">
     <!-- 👉 navbar -->
     <template #navbar>
-      <NuxtLink
-        to="/"
-        class="d-flex align-start gap-x-4"
-      >
+      <NuxtLink to="/" class="d-flex align-start gap-x-4">
         <VNodeRenderer :nodes="themeConfig.app.logo" />
-
-        <h1 class="leading-normal text-xl text-uppercase">
+        <span class="leading-normal text-uppercase app-logo-title text-xl"
+          style="color: rgb(var(--v-global-theme-primary))">
           {{ themeConfig.app.title }}
-        </h1>
+        </span>
       </NuxtLink>
       <VSpacer />
 
       <NavSearchBar />
 
-      <NavBarI18n
-        v-if="themeConfig.app.i18n.enable && themeConfig.app.i18n.langConfig?.length"
-        :languages="themeConfig.app.i18n.langConfig"
-      />
+      <NavBarI18n v-if="themeConfig.app.i18n.enable && themeConfig.app.i18n.langConfig?.length"
+        :languages="themeConfig.app.i18n.langConfig" />
 
       <NavbarThemeSwitcher />
       <NavbarShortcuts />
