@@ -1,8 +1,10 @@
+import { MedplumClient } from '@medplum/core';
 import { jwtDecode } from 'jwt-decode';
 import { DefaultJWT } from 'next-auth/jwt';
-import { NuxtError } from 'nuxt/app';
+import { NuxtError, useNuxtApp } from 'nuxt/app';
 
-const { auth0ClientId, auth0ClientSecret, auth0Issuer, auth0Audience } = useRuntimeConfig();
+const { auth0ClientId, auth0ClientSecret, auth0Issuer, auth0Audience, medplumClientId } = useRuntimeConfig();
+const { medplumBaseUrl } = useRuntimeConfig().public;
 
 export default defineEventHandler(async (event) => {
   const { email, password } = await readBody(event);
@@ -17,6 +19,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  console.info(`intializing cordina authentication with ${auth0Issuer}`);
   const myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -36,7 +39,9 @@ export default defineEventHandler(async (event) => {
     redirect: 'follow',
   };
 
+  console.info('waithing for cordina authentication response');
   const auth = await $fetch<any>(`${auth0Issuer}/oauth/token`, requestOptions).catch((err: NuxtError) => {
+    console.error('cordina authentication error code: %d', err.statusCode);
     throw createError({
       statusCode: err.statusCode,
       statusMessage: err.statusMessage,
@@ -45,14 +50,39 @@ export default defineEventHandler(async (event) => {
       },
     });
   });
-
+  
   const idToken = jwtDecode(auth.id_token) as DefaultJWT;
   const accessToken = jwtDecode(auth.access_token) as DefaultJWT;
-  
+
   const permissions = accessToken.permissions.map((perm) => {
     const [action, subject] = perm.split(':');
     return { action, subject };
   });
+
+  console.info('cordina authentication successful');
+
+
+  console.info('intializing emr system authorization with %s', medplumBaseUrl);
+  const medplum = new MedplumClient({
+    baseUrl: medplumBaseUrl,
+    clientId: medplumClientId,
+    cacheTime: 60000,
+    autoBatchTime: 100,
+    onUnauthenticated: () => {
+      console.info('emr system is being unauthenticated');
+    },
+  });
+
+  console.info('waithing for emr system authorization response');
+  const resourceType = await medplum.exchangeExternalAccessToken(auth.access_token).catch((err: NuxtError) => {
+    console.log(err)
+    throw createError({
+      statusCode: err.statusCode,
+      statusMessage: err.data,
+    });
+  });
+
+  console.info('emr system authorization complete');
 
   const identity = {
     id: idToken.sub,
@@ -64,6 +94,7 @@ export default defineEventHandler(async (event) => {
     role: idToken.role,
     abilityRules: permissions,
     accessToken: accessToken,
+    emr: resourceType,
   };
 
   // ℹ️ Don't send password in response

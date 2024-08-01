@@ -22,7 +22,7 @@ const { client, navigate } = useMedplum()
 
 <template>
   <VLocaleProvider :rtl="configStore.isAppRTL">
-    <MedplumProvider :medplum="client" :navigate="navigate">
+    <MedplumProvider :medplum=client :navigate=navigate>
       <!-- ℹ️ This is required to set the background color of active nav link based on currently active global theme's primary -->
       <VApp :style="`--v-global-theme-primary: ${hexToRgb(global.current.value.colors.primary)}`">
         <NuxtLayout>

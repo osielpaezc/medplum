@@ -30,7 +30,7 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
       <NuxtLink to="/" class="d-flex align-start gap-x-4">
         <VNodeRenderer :nodes="themeConfig.app.logo" />
         <span class="leading-normal text-uppercase app-logo-title text-xl"
-          style="color: rgb(var(--v-global-theme-primary))">
+          style="color: #d40000"> <!--rgb(var(--v-global-theme-primary))-->
           {{ themeConfig.app.title }}
         </span>
       </NuxtLink>

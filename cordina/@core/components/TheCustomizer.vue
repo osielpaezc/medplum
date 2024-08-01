@@ -29,8 +29,8 @@ const colors: { main: string; darken: string }[] = [
   { main: staticPrimaryColor, darken: staticPrimaryDarkenColor },
   { main: '#0D9394', darken: '#0C8485' },
   { main: '#FFB400', darken: '#E6A200' },
-  { main: '#FF4C51', darken: '#E64449' },
-  { main: '#16B1FF', darken: '#149FE6' },
+  { main: '#D45500', darken: '#F6AB24' },
+  { main: '#CE117C', darken: '#EE3BA0' }
 ]
 
 const customPrimaryColor = ref('#663131')

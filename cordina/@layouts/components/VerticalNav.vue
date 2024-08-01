@@ -80,9 +80,10 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
           <VNodeRenderer :nodes="layoutConfig.app.logo" />
 
           <Transition name="vertical-nav-app-title">
+            <!--style="color: rgb(var(--v-global-theme-primary))-->
             <span
               v-show="!hideTitleAndIcon"
-              class="leading-normal app-logo-title" style="color: rgb(var(--v-global-theme-primary))"
+              class="leading-normal app-logo-title" style="color: #d40000"
             >
               {{ layoutConfig.app.title }}
           </span>

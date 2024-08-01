@@ -54,7 +54,7 @@ export default defineNuxtConfig({
     auth0ClientSecret: process.env.AUTH0_CLIENT_SECRET,
     auth0Issuer: process.env.AUTH0_ISSUER,
     auth0Audience: process.env.AUTH0_AUDIENCE,
-    MedplumClientId: process.env.MEDPLUM_CLIENT_ID,
+    medplumClientId: process.env.MEDPLUM_CLIENT_ID,
 
     // Public keys that are exposed to the client.
     public: {
@@ -87,61 +87,6 @@ export default defineNuxtConfig({
       type: 'authjs',
     },
   },
-
-
-  // auth: { 
-  //   isEnabled: true,
-  //   disableServerSideAuth: false,
-  //   baseURL: `${process.env.AUTH_ORIGIN}/api/auth`,
-  //   provider: {
-  //     type: 'authjs',
-  //     trustHost: false,
-  //     defaultProvider: 'auth0',
-  //     addDefaultCallbackUrl: true,
-  //   },
-  //   globalAppMiddleware: {
-  //     isEnabled: false,
-  //     allow404WithoutAuth: true,
-  //     addDefaultCallbackUrl: true
-  //   },
-  //   sessionRefresh: {
-  //       enablePeriodically: true,
-  //       enableOnWindowFocus: true,
-  //   }
-
-  // auth: {
-  //   provider: {
-  //     type: 'authjs',
-  //     addDefaultCallbackUrl: false
-  //   },
-  //   // https://sidebase.io/nuxt-auth/v0.6/configuration/nuxt-auth-handler#nuxtauthhandler
-  //   origin: deploymentDomain,
-  //   // https://sidebase.io/nuxt-auth/v0.6/configuration/nuxt-config#module-nuxtconfigts
-  //   baseUrl: `/api/auth`,
-  //   addDefaultCallbackUrl: false,
-  //   globalAppMiddleware: {
-  //     isEnabled: true,
-  //     allow404WithoutAuth: true,
-  //     addDefaultCallbackUrl: false
-  //   },
-  // },
-
-  // auth: {
-  //   provider: {
-  //     type: 'authjs',
-  //     addDefaultCallbackUrl: true
-  //   },
-  //   // https://sidebase.io/nuxt-auth/v0.6/configuration/nuxt-auth-handler#nuxtauthhandler
-  //   origin: deploymentDomain,
-  //   // https://sidebase.io/nuxt-auth/v0.6/configuration/nuxt-config#module-nuxtconfigts
-  //   baseUrl: `/api/auth`,
-  //   addDefaultCallbackUrl: false,
-  //   // globalAppMiddleware: {
-  //   //   isEnabled: true,
-  //   //   allow404WithoutAuth: true,
-  //   //   addDefaultCallbackUrl: true
-  //   // },
-  //},
 
   plugins: [
     '@/plugins/casl/index.ts',

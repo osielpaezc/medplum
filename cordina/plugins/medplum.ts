@@ -67,9 +67,13 @@ export const MedplumProvider = defineComponent({
         profile: props.medplum.getProfile(),
         loading: props.medplum.isLoading(),
       };
+
+      console.log('medplum provider installed')
     };
+  
 
     onMounted(() => {
+
       for (const event of EVENTS_TO_TRACK) {
         props.medplum.addEventListener(event, eventListener);
       }

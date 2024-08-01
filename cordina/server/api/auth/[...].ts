@@ -38,6 +38,7 @@ export default NuxtAuthHandler({
       // Persist the OAuth access_token and or the user id to the token right after signin
       if (account) {
         token.accessToken = user.accessToken
+        token.emr = user.emr
         token.abilityRules = user.abilityRules;
         token.avatar = user.avatar;
         token.role = user.role;
@@ -52,6 +53,7 @@ export default NuxtAuthHandler({
       session.user.avatar = token.avatar;
       session.user.abilityRules = token.abilityRules;
       session.user.role = token.role;
+      session.user.emr = token.emr;
       }
 
       return session;
