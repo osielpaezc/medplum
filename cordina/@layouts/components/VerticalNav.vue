@@ -151,7 +151,7 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
   column-gap: 0.75rem;
 
   .app-logo-title {
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 800;
     line-height: 1.75rem;
     text-transform: uppercase;
