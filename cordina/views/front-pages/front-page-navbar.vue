@@ -214,7 +214,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
               <VNodeRenderer :nodes="themeConfig.app.logo" />
 
               <div
-                class="nav-title text-uppercase text-truncate"
+                class="nav-title text-uppercase leading-normal app-logo-title"
                 :class="[$vuetify.display.lgAndUp ? 'd-block' : 'd-none', $vuetify.display.mdAndUp ? 'd-none' : 'd-block']"
               >
                 {{ themeConfig.app.title }}
@@ -371,11 +371,13 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
 }
 
 .nav-title {
-  color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity)) !important;
-  font-size: 1.25rem;
-  font-weight: 600;
+  //color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity)) !important;
+  color: #d40000 !important;
   letter-spacing: 0.15px;
   line-height: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .nav-link {

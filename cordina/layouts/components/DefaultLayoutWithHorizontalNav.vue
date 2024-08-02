@@ -18,9 +18,9 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 .app-logo-title {
   font-size: 1.2rem;
   font-weight: 800;
-  line-height: 1.75rem;
   text-transform: uppercase;
-
+  line-height: 1.75rem;
+  color: #d40000;
 }
 </style>
 <template>
@@ -29,8 +29,7 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
     <template #navbar>
       <NuxtLink to="/" class="d-flex align-start gap-x-4">
         <VNodeRenderer :nodes="themeConfig.app.logo" />
-        <span class="leading-normal text-uppercase app-logo-title text-xl pt-2"
-          style="color: #d40000"> <!--rgb(var(--v-global-theme-primary))"-->
+        <span class="leading-normal text-uppercase app-logo-title text-xl pt-2"> <!--rgb(var(--v-global-theme-primary))"-->
           {{ themeConfig.app.title }}
         </span>
       </NuxtLink>

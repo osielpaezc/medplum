@@ -35,7 +35,7 @@ const menus: Menu[] = [
               <div class="d-flex align-center gap-x-3 mb-6">
                 <VNodeRenderer :nodes="themeConfig.app.logo" />
                 <div class="footer-title">
-                  MATERIO
+                  CORDINA
                 </div>
               </div>
               <div class="text-body-1 footer-text mb-6">
@@ -227,10 +227,11 @@ const menus: Menu[] = [
 
 .footer-title {
   color: rgba(255, 255, 255, var(--v-high-emphasis-opacity));
-  font-size: 1.25rem;
-  font-weight: 600;
   letter-spacing: 0.15px;
   line-height: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .footer-line {
