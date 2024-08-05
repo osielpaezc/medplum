@@ -1,8 +1,10 @@
 import type { DefaultSession } from 'next-auth'
 import { Rule } from './plugins/casl/ability'
+import { ProfileResource } from '@medplum/core';
 
 
 interface UserAdditionalData {
+  id: string
   username?: string
   fullName?: string
   avatar?: string
@@ -22,6 +24,7 @@ declare module "next-auth" {
    */
   interface Session {
     user: UserAdditionalData & DefaultSession['user']
+    hms?: ResourceProfile
   }
 
   interface User extends UserAdditionalData { }

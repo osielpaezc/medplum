@@ -1,6 +1,5 @@
 import { MedplumClient, type MedplumClientOptions } from '@medplum/core';
 
-
 export class Medplum {
   private static instance: MedplumClient | null = null;
   

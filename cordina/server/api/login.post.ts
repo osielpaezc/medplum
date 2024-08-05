@@ -5,7 +5,6 @@ import { NuxtError } from 'nuxt/app';
 const { auth0ClientId, auth0ClientSecret, auth0Issuer, auth0Audience } = useRuntimeConfig();
 
 export default defineEventHandler(async (event) => {
-  
   const { email, password } = await readBody(event);
 
   if (!email || !password) {
@@ -57,29 +56,6 @@ export default defineEventHandler(async (event) => {
     const [action, subject] = perm.split(':');
     return { action, subject };
   });
-
-  //  logger?.info('intializing emr system authorization with %s', medplumBaseUrl);
-
-  // const medplum = new MedplumClient({
-  //   baseUrl: medplumBaseUrl,
-  //   clientId: medplumClientId,
-  //   cacheTime: 60000,
-  //   autoBatchTime: 100,
-  //   onUnauthenticated: () => {
-  //     logger?.info('emr system is being unauthenticated');
-  //   },
-  // });
-
-  // logger?.info('waithing for emr system authorization response');
-  // const resourceType = await medplum.exchangeExternalAccessToken(auth.access_token).catch((err: NuxtError) => {
-  //   logger?.log(err);
-  //   throw createError({
-  //     statusCode: err.statusCode,
-  //     statusMessage: err.data,
-  //   });
-  // });
-
-  // logger?.info('emr system authorization complete');
 
   const identity = {
     id: idToken.sub,

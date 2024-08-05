@@ -2,6 +2,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { type NuxtError } from 'nuxt/app';
 import { NuxtAuthHandler } from '#auth';
 import { Medplum } from '~/utils/medplum';
+import { MedplumClientOptions, ProfileResource } from '@medplum/core';
 
 const { nextAuthSecret } = useRuntimeConfig();
 const { isDeployed } = useRuntimeConfig().public;
@@ -49,34 +50,40 @@ export default NuxtAuthHandler({
       return token;
     },
     async session({ session, token }) {
-      const config = {
+      if (!session.user) return session;
+
+      // Add custom params to user in session which are added in `jwt()` callback via `token` parameter
+      session.user.id = token.sub;
+      session.user.username = token.email;
+      session.user.fullName = token.name;
+      session.user.avatar = token.avatar;
+      session.user.abilityRules = token.abilityRules;
+      session.user.role = token.role;
+
+      // Add to Health Management System info if user is in Medplum
+      const medplum = Medplum.getInstance({
         baseUrl: process.env.MEDPLUM_BASE_URL,
         clientId: process.env.MEDPLUM_CLIENT_ID,
         clientSecret: process.env.MEDPLUM_CLIENT_SECRET,
-      };
+        onUnauthenticated: () => {
+          console.log("User is unauthenticated. Redirecting to login...");
+          //router.push('/login');
+        }
+      } as MedplumClientOptions);
 
-      const medplum = Medplum.getInstance(config);
-      console.log('in api', token.accessToken);
-
-      const resourceType = await medplum.exchangeExternalAccessToken(token.accessToken).catch((err: NuxtError) => {
+      await medplum.exchangeExternalAccessToken(token.accessToken)
+      .then((medplum: ProfileResource) => {
+        session.hms = medplum;
+      })
+      .catch((err: NuxtError) => {
         console.error(err);
-        throw createError({
-          statusCode: err.statusCode,
-          statusMessage: err.data,
-        });
+        // throw createError({
+        //   statusCode: err.statusCode,
+        //   statusMessage: err.data,
+        // });
       });
 
-      console.log('medplum', resourceType)
-
-      // Add custom params to user in session which are added in `jwt()` callback via `token` parameter
-      if (session.user) {
-        session.user.id = token.sub;
-        session.user.username = token.email;
-        session.user.fullName = token.name;
-        session.user.avatar = token.avatar;
-        session.user.abilityRules = token.abilityRules;
-        session.user.role = token.role;
-      }
+      console.log('session', session)
 
       return session;
     },
