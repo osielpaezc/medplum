@@ -39,6 +39,10 @@ const statistic = {
   change: -18,
   subtitle: 'Yearly Project',
 }
+
+const { authenticateWithToken } = useMedplum()
+const u = await authenticateWithToken()
+
 </script>
 
 <template>

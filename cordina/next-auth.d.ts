@@ -10,6 +10,7 @@ interface UserAdditionalData {
   avatar?: string
   role?: string
   abilityRules?: Rule[]
+  token: string;
 }
 
 declare module 'next-auth/jwt' {

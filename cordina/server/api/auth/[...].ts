@@ -3,6 +3,7 @@ import { type NuxtError } from 'nuxt/app';
 import { NuxtAuthHandler } from '#auth';
 import { Medplum } from '~/utils/medplum';
 import { MedplumClientOptions, ProfileResource } from '@medplum/core';
+import { useMedplum } from '~/composables/useMedplum';
 
 const { nextAuthSecret } = useRuntimeConfig();
 const { isDeployed } = useRuntimeConfig().public;
@@ -59,32 +60,33 @@ export default NuxtAuthHandler({
       session.user.avatar = token.avatar;
       session.user.abilityRules = token.abilityRules;
       session.user.role = token.role;
+      session.user.token =  token.accessToken;
 
-      // Add to Health Management System info if user is in Medplum
-      const medplum = Medplum.getInstance({
-        baseUrl: process.env.MEDPLUM_BASE_URL,
-        clientId: process.env.MEDPLUM_CLIENT_ID,
-        clientSecret: process.env.MEDPLUM_CLIENT_SECRET,
-        onUnauthenticated: () => {
-          console.log("User is unauthenticated. Redirecting to login...");
-          //router.push('/login');
-        }
-      } as MedplumClientOptions);
+      // console.info('HMS initiating authentication for %s.', token.sub);
+      // // Add to Health Management System info if user is in Medplum
+      // const medplum = Medplum.getInstance({
+      //   baseUrl: process.env.MEDPLUM_BASE_URL,
+      //   clientId: process.env.MEDPLUM_CLIENT_ID,
+      //   clientSecret: process.env.MEDPLUM_CLIENT_SECRET,
+      //   // onUnauthenticated: () => {
+      //   //   console.log("User is unauthenticated. Redirecting to login...");
+      //   //   //router.push('/login');
+      //   // }
+      // } as MedplumClientOptions);
 
-      await medplum.exchangeExternalAccessToken(token.accessToken)
-      .then((medplum: ProfileResource) => {
-        session.hms = medplum;
-      })
-      .catch((err: NuxtError) => {
-        console.error(err);
-        // throw createError({
-        //   statusCode: err.statusCode,
-        //   statusMessage: err.data,
-        // });
-      });
-
-      console.log('session', session)
-
+      // await medplum.exchangeExternalAccessToken(token.accessToken)
+      // .then((medplum: ProfileResource) => {
+      //   session.hms = medplum;
+      //   session.hms.token = token.accessToken
+      //   console.info('HMS authentication success for %s.', token.sub);
+      // })
+      // .catch((err: NuxtError) => {
+      //   console.error('HMS authentication error for %s.', token.sub);
+      //   // throw createError({
+      //   //   statusCode: err.statusCode,
+      //   //   statusMessage: err.data,
+      //   // });
+      // });
       return session;
     },
   },

@@ -16,10 +16,6 @@ const { isMobile } = useDevice()
 if (isMobile)
   configStore.appContentLayoutNav = 'vertical'
 
-//const { client, navigate } = useMedplum()
-const medplum = useMedplum()
-
-console.info('in app.vue');
 
 </script>
 
