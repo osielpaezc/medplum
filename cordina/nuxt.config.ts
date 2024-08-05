@@ -3,13 +3,14 @@ import svgLoader from 'vite-svg-loader'
 import vuetify from 'vite-plugin-vuetify'
 
 const isDeployed = (
-  process.env.AUTH_ORIGIN === 'http://localhost:3000'
+  process.env.AUTH_ORIGIN === 'https://localhost:3000'
   || !process.env.AUTH_ORIGIN
 ) ? false : true;
 const deploymentDomain = process.env.AUTH_ORIGIN || 'http://localhost:3000';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  //debug: true,
 
   devServer: {
     https: {
@@ -17,6 +18,8 @@ export default defineNuxtConfig({
       cert: 'server.crt'
     }
   },
+
+  serverDir : './server',
   
   app: {
     head: {
@@ -54,12 +57,13 @@ export default defineNuxtConfig({
     auth0ClientSecret: process.env.AUTH0_CLIENT_SECRET,
     auth0Issuer: process.env.AUTH0_ISSUER,
     auth0Audience: process.env.AUTH0_AUDIENCE,
+    medplumBaseUrl: process.env.MEDPLUM_BASE_URL,
     medplumClientId: process.env.MEDPLUM_CLIENT_ID,
-
+    medplumClientSecret: process.env.MEDPLUM_CLIENT_SECRET,
     // Public keys that are exposed to the client.
     public: {
+      isDeployed,
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || '/api',
-      medplumBaseUrl: process.env.MEDPLUM_BASE_URL,  
     },
   },
 

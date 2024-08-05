@@ -1,20 +1,10 @@
-import { MedplumContextSymbol } from "@/plugins/medplum"
+import type { MedplumClient } from "@medplum/core";
+import { useNuxtApp } from '#app';
 
-
-export const useMedplumContext = () => {
-  const context = inject(MedplumContextSymbol);
-  if (!context) {
-    throw new Error('No Medplum context provided');
+export function useMedplum(): MedplumClient {
+  const { $medplum } = useNuxtApp();
+  if (!$medplum) {
+    throw new Error('MedplumClient has not been provided!');
   }
-  return context;
-}
-
-
-export const useMedplum = () => {
-  const context = useMedplumContext()
-  return {
-    client: context.medplum,
-    navigate: context.navigate,
-    profile: context.profile
-  }
+  return $medplum;
 }

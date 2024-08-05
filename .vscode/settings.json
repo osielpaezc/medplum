@@ -21,5 +21,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "never"
   },
-  "vitest.disableWorkspaceWarning": true
+  "vitest.disableWorkspaceWarning": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
