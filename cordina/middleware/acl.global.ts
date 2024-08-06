@@ -40,15 +40,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   if (isLoggedIn && $chms?.isInitialized) {
     const accessToken = data.value?.user.token;
+    const userId = data.value?.user.id;
     if (accessToken) {
-      try {
-        const profile = await $chms.authenticateWithToken(accessToken);
-        console.log('Profile:', profile);
-      } catch (error) {
-        console.error('CHMS (Cordina Health Management Service) Authentication error:', error);
-      }
+        await $chms.authenticateWithToken(userId, accessToken);
+        console.info($chms.profile.value)
     } else {
-      console.warn('User Access token not found.');
+      console.warn('%s - User Access token not found.', userId);
     }
   } else {
     console.warn('User is not logged in or CHMS (Cordina Health Management Service) is not initialized.');
