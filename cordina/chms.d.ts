@@ -3,10 +3,7 @@ import type { MedplumClient, ProfileResource } from "@medplum/core"
 
 export interface CHMSContext {
   client: Ref<MedplumClient | null>,
-  authenticateWithToken: (accessToken: string) => Promise<ProfileResource>;
-  isAuthenticated: Ref<boolean>,
-  isInitialized: Ref<boolean>,
-  profile: Ref<ProfileResource | null>
+  isInitialized: Ref<boolean>
 }
 
 declare module '#app' {

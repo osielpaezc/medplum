@@ -75,11 +75,8 @@ export default defineNuxtPlugin({
 
       // expose pluging objects trough the context interface
       nuxtApp.provide('chms', {
-        client,
-        authenticateWithToken,
-        isAuthenticated,
+        client: instance,
         isInitialized: ref(instance.value?.isInitialized),
-        profile,
       } as CHMSContext);
     },
   },
