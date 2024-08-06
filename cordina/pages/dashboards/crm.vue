@@ -40,9 +40,6 @@ const statistic = {
   subtitle: 'Yearly Project',
 }
 
-const { authenticateWithToken } = useMedplum()
-const u = await authenticateWithToken()
-
 </script>
 
 <template>
