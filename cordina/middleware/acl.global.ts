@@ -37,12 +37,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   // authenticate user with CHMS when user is login and CHMS is initialized
-  const $chms = useNuxtApp().$chms;
-  if (isLoggedIn && $chms?.isInitialized) {
+  const chms = useNuxtApp().$chms;
+  if (isLoggedIn && chms?.isInitialized) {
     const chmsStore = useChmsStore();
-
-    const accessToken = data.value?.user.token;
     const userId = data.value?.user.id;
+    const accessToken = data.value?.user.token;
+    
     if (accessToken) {
       await chmsStore.setAuthenticated(userId, accessToken);
     } else {

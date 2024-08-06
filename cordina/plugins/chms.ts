@@ -42,6 +42,7 @@ export default defineNuxtPlugin({
     // You can directly register Nuxt app runtime hooks here
     'app:created'() {
       const nuxtApp = useNuxtApp();
+      const chmsStore = useChmsStore()
 
       let errorMessage;
 
@@ -72,6 +73,9 @@ export default defineNuxtPlugin({
           e
         );
       }
+      
+      // signal store as initialized
+      chmsStore.setInitialized(instance.value?.isInitialized)
 
       // expose pluging objects trough the context interface
       nuxtApp.provide('chms', {
