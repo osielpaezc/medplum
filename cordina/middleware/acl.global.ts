@@ -38,6 +38,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     /* eslint-enable indent */
   }
 
+  // authenticate user with CHMS when user is login and CHMS is initialized
   if (isLoggedIn && $chms?.isInitialized) {
     const accessToken = data.value?.user.token;
     const userId = data.value?.user.id;
@@ -48,7 +49,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
       console.warn('%s - User Access token not found.', userId);
     }
   } else {
-    console.warn('User is not logged in or CHMS (Cordina Health Management Service) is not initialized.');
+    console.warn('User is not logged in or CHMS is not initialized.');
   }
 
 });
