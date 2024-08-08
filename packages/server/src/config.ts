@@ -54,6 +54,8 @@ export interface MedplumServerConfig {
   heartbeatMilliseconds?: number;
   heartbeatEnabled?: boolean;
   accurateCountThreshold: number;
+  slowQueryThresholdMilliseconds?: number;
+  slowQuerySampleRate?: number;
   defaultBotRuntimeVersion: 'awslambda' | 'vmcontext';
   defaultProjectFeatures?:
     | (
@@ -234,6 +236,8 @@ function loadEnvConfig(): MedplumServerConfig {
 
     if (isIntegerConfig(key)) {
       currConfig[key] = parseInt(value ?? '', 10);
+    } else if (isFloatConfig(key)) {
+      currConfig[key] = parseFloat(value ?? '');
     } else if (isBooleanConfig(key)) {
       currConfig[key] = value === 'true';
     } else if (isObjectConfig(key)) {
@@ -283,7 +287,11 @@ function addDefaults(config: MedplumServerConfig): MedplumServerConfig {
 }
 
 function isIntegerConfig(key: string): boolean {
-  return key === 'port' || key === 'accurateCountThreshold';
+  return key === 'port' || key === 'accurateCountThreshold' || key === 'slowQueryThresholdMilliseconds';
+}
+
+function isFloatConfig(key: string): boolean {
+  return key === 'slowQuerySampleRate';
 }
 
 function isBooleanConfig(key: string): boolean {

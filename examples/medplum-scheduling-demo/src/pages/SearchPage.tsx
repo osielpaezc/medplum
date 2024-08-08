@@ -1,7 +1,7 @@
 import { Paper } from '@mantine/core';
 import { Filter, formatSearchQuery, parseSearchRequest, SearchRequest, SortRule } from '@medplum/core';
 import { UserConfiguration } from '@medplum/fhirtypes';
-import { Loading, MemoizedSearchControl, useMedplum } from '@medplum/react';
+import { Loading, SearchControl, useMedplum } from '@medplum/react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import classes from './SearchPage.module.css';
@@ -42,7 +42,7 @@ export function SearchPage(): JSX.Element {
 
   return (
     <Paper shadow="xs" m="md" p="xs" className={classes.paper}>
-      <MemoizedSearchControl
+      <SearchControl
         checkboxesEnabled={false}
         search={search}
         onClick={(e) => navigate(`/${e.resource.resourceType}/${e.resource.id}`)}
@@ -106,8 +106,6 @@ function getDefaultFields(resourceType: string): string[] {
   switch (resourceType) {
     case 'Patient':
       return ['name', 'gender', 'birthDate', '_lastUpdated'];
-    case 'Practitioner':
-      return ['name', '_lastUpdated'];
     default:
       return ['_id', '_lastUpdated'];
   }

@@ -43,6 +43,7 @@ import {
 } from '@medplum/fhirtypes';
 import validator from 'validator';
 import { getConfig } from '../config';
+import { getLogger } from '../context';
 import { DatabaseMode } from '../database';
 import { deriveIdentifierSearchParameter } from './lookups/util';
 import { getLookupTable, Repository } from './repo';
@@ -59,6 +60,7 @@ import {
   periodToRangeString,
   SelectQuery,
   Operator as SQL,
+  SqlBuilder,
   Union,
 } from './sql';
 
@@ -160,11 +162,13 @@ async function getSearchEntries<T extends Resource>(
 
   addSortRules(builder, searchRequest);
 
+  const startTime = Date.now();
   const count = searchRequest.count as number;
   builder.limit(count + 1); // Request one extra to test if there are more results
   builder.offset(searchRequest.offset || 0);
 
   const rows = await builder.execute(repo.getDatabaseClient(DatabaseMode.READER));
+  const endTime = Date.now();
   const rowCount = rows.length;
   const resources = rows.slice(0, count).map((row) => JSON.parse(row.content as string)) as T[];
   const entries = resources.map(
@@ -184,6 +188,20 @@ async function getSearchEntries<T extends Resource>(
       continue;
     }
     removeResourceFields(entry.resource, repo, searchRequest);
+  }
+
+  const duration = endTime - startTime;
+  const config = getConfig();
+  const threshold = config.slowQueryThresholdMilliseconds;
+  const sampleRate = config.slowQuerySampleRate ?? 1;
+  if (threshold !== undefined && duration > threshold && Math.random() < sampleRate) {
+    builder.explain = true;
+    builder.analyzeBuffers = true;
+    const sqlBuilder = new SqlBuilder();
+    const sql = builder.buildSql(sqlBuilder);
+    const explainRows = await builder.execute(repo.getDatabaseClient(DatabaseMode.READER));
+    const explain = explainRows.map((row) => row['QUERY PLAN']).join('\n');
+    getLogger().warn('Slow search query', { duration, searchRequest, sql, explain });
   }
 
   return {
@@ -518,10 +536,31 @@ async function getEstimateCount(
     }
   }
 
-  // Apply some logic to avoid obviously incorrect estimates
-  const startIndex = (searchRequest.offset ?? 0) * (searchRequest.count ?? DEFAULT_SEARCH_COUNT);
-  const minCount = rowCount === undefined ? startIndex : startIndex + rowCount;
-  return Math.max(minCount, result);
+  return clampEstimateCount(searchRequest, rowCount, result);
+}
+
+/**
+ * Returns a "clamped" estimate count based on the actual row count.
+ * @param searchRequest - The search request.
+ * @param rowCount - The number of matching results if found. Value can be up to one more than the requested count.
+ * @param estimateCount - The estimated number of matching results.
+ * @returns The clamped estimate count.
+ */
+export function clampEstimateCount(
+  searchRequest: SearchRequest,
+  rowCount: number | undefined,
+  estimateCount: number
+): number {
+  if (searchRequest.count === 0 || rowCount === undefined) {
+    // If "count only" or rowCount is undefined, then the estimate is the best we can do
+    return estimateCount;
+  }
+
+  const pageSize = searchRequest.count ?? DEFAULT_SEARCH_COUNT;
+  const startIndex = searchRequest.offset ?? 0;
+  const minCount = rowCount > 0 ? startIndex + rowCount : 0;
+  const maxCount = rowCount <= pageSize ? startIndex + rowCount : Number.MAX_SAFE_INTEGER;
+  return Math.max(minCount, Math.min(maxCount, estimateCount));
 }
 
 /**

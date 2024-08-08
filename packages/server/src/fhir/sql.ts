@@ -145,7 +145,8 @@ export class Column {
   constructor(
     readonly tableName: string | undefined,
     readonly columnName: string,
-    readonly raw?: boolean
+    readonly raw?: boolean,
+    readonly alias?: string
   ) {}
 }
 
@@ -311,6 +312,10 @@ export class SqlBuilder {
       }
       this.appendIdentifier(column.columnName);
     }
+    if (column.alias) {
+      this.append(' AS ');
+      this.appendIdentifier(column.alias);
+    }
     return this;
   }
 
@@ -385,9 +390,12 @@ export abstract class BaseQuery {
   readonly tableName: string;
   readonly predicate: Conjunction;
   explain = false;
+  analyzeBuffers = false;
+  readonly alias?: string;
 
-  constructor(tableName: string) {
+  constructor(tableName: string, alias?: string) {
     this.tableName = tableName;
+    this.alias = alias;
     this.predicate = new Conjunction([]);
   }
 
@@ -427,8 +435,8 @@ export class SelectQuery extends BaseQuery implements Expression {
   offset_: number;
   joinCount = 0;
 
-  constructor(tableName: string, innerQuery?: SelectQuery | Union) {
-    super(tableName);
+  constructor(tableName: string, innerQuery?: SelectQuery | Union, alias?: string) {
+    super(tableName, alias);
     this.innerQuery = innerQuery;
     this.distinctOns = [];
     this.columns = [];
@@ -497,6 +505,9 @@ export class SelectQuery extends BaseQuery implements Expression {
   buildSql(sql: SqlBuilder): void {
     if (this.explain) {
       sql.append('EXPLAIN ');
+      if (this.analyzeBuffers) {
+        sql.append('(ANALYZE, BUFFERS) ');
+      }
     }
     if (this.with) {
       sql.append('WITH ');
@@ -576,6 +587,11 @@ export class SelectQuery extends BaseQuery implements Expression {
     }
 
     sql.appendIdentifier(this.tableName);
+    if (this.alias) {
+      sql.append(' ');
+      sql.appendIdentifier(this.alias);
+      sql.append(' ');
+    }
 
     for (const join of this.joins) {
       sql.append(` ${join.joinType} `);

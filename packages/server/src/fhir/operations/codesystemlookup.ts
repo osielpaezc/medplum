@@ -56,13 +56,7 @@ export async function lookupCoding(codeSystem: CodeSystem, coding: Coding): Prom
     throw new OperationOutcomeError(notFound);
   }
 
-  const lookup = new SelectQuery('Coding');
-  const codeSystemTable = lookup.getNextJoinAlias();
-  lookup.innerJoin(
-    'CodeSystem',
-    codeSystemTable,
-    new Condition(new Column('Coding', 'system'), '=', new Column(codeSystemTable, 'id'))
-  );
+  const lookup = new SelectQuery('Coding').column('display');
   const propertyTable = lookup.getNextJoinAlias();
   lookup.leftJoin(
     'Coding_Property',
@@ -75,15 +69,16 @@ export async function lookupCoding(codeSystem: CodeSystem, coding: Coding): Prom
     csPropTable,
     new Condition(new Column(propertyTable, 'property'), '=', new Column(csPropTable, 'id'))
   );
+  const target = lookup.getNextJoinAlias();
+  lookup.leftJoin('Coding', target, new Condition(new Column(propertyTable, 'target'), '=', new Column(target, 'id')));
   lookup
-    .column(new Column(codeSystemTable, 'title'))
-    .column(new Column('Coding', 'display'))
     .column(new Column(csPropTable, 'code'))
     .column(new Column(csPropTable, 'type'))
     .column(new Column(csPropTable, 'description'))
     .column(new Column(propertyTable, 'value'))
-    .where(new Column(codeSystemTable, 'id'), '=', codeSystem.id)
-    .where(new Column('Coding', 'code'), '=', coding.code);
+    .column(new Column(target, 'display', undefined, 'targetDisplay'))
+    .where('code', '=', coding.code)
+    .where('system', '=', codeSystem.id);
 
   const db = getDatabasePool(DatabaseMode.READER);
   const result = await lookup.execute(db);
@@ -93,14 +88,14 @@ export async function lookupCoding(codeSystem: CodeSystem, coding: Coding): Prom
   }
 
   const output: CodeSystemLookupOutput = {
-    name: resolved.title,
+    name: codeSystem.title ?? codeSystem.name ?? (codeSystem.url as string),
     display: resolved.display ?? '',
   };
   for (const property of result) {
     if (property.code && property.value) {
       output.property = append(output.property, {
         code: property.code,
-        description: property.description,
+        description: property.targetDisplay ?? property.description,
         value: { type: property.type, value: property.value },
       });
     }

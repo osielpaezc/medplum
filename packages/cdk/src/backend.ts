@@ -99,6 +99,7 @@ export class BackEnd extends Construct {
       const defaultInstanceProps: rds.ProvisionedClusterInstanceProps = {
         enablePerformanceInsights: true,
         isFromLegacyInstanceProps: true,
+        caCertificate: rds.CaCertificate.RDS_CA_RSA2048_G1,
       };
 
       const readerInstanceType = config.rdsReaderInstanceType ?? config.rdsInstanceType;
@@ -502,7 +503,7 @@ export class BackEnd extends Construct {
           certificateArn: config.apiSslCertArn,
         },
       ],
-      sslPolicy: elbv2.SslPolicy.FORWARD_SECRECY_TLS12_RES_GCM,
+      sslPolicy: elbv2.SslPolicy.RECOMMENDED_TLS,
       defaultAction: elbv2.ListenerAction.forward([this.targetGroup]),
     });
 
