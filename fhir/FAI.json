@@ -1,0 +1,323 @@
+{
+  "resourceType": "Questionnaire",
+  "title": "Functional Assessment Interview",
+  "name": "q-functional-assessment-interview",
+  "status": "draft",
+  "description": "Functional Assessment Interview (FAI) is a structured tool used to gather information about a person’s challenging behavior and the contextual factors that influence it. The FAI aims to identify the functions or purposes that the behavior serves for the individual, such as gaining attention, avoiding tasks, or accessing specific items or activities. By conducting the interview with individuals familiar with the person exhibiting the behavior, such as parents, teachers, or caregivers, practitioners can gather insights into the antecedents (triggers), behaviors, and consequences (outcomes) associated with the behavior. This information is then used to develop effective intervention strategies tailored to address the identified functions of the behavior",
+  "purpose": "Identify Function: Determine why a behavior occurs by identifying the reinforcing consequences. Test Hypotheses: Confirm or refute hypotheses about the behavior’s function developed during indirect assessments and direct observations. Inform Interventions: Use the results to develop targeted intervention strategies that address the behavior’s function.",
+  "id": "9d3ce3d5-f477-4eb5-94c4-988765fa387d",
+  "meta": {
+    "project": "20cc124d-98c1-486b-a51b-62afb30ba06c",
+    "compartment": [
+      {
+        "reference": "Project/20cc124d-98c1-486b-a51b-62afb30ba06c"
+      }
+    ],
+    "versionId": "0fdf0089-0344-4bdb-9d3b-f12a89bbba1d",
+    "lastUpdated": "2024-08-07T23:56:32.570Z",
+    "author": {
+      "reference": "Practitioner/4983eaab-a84c-4a7d-a435-bc0033ff152b",
+      "display": "Osiel Paez Lima"
+    }
+  },
+  "publisher": "CORDINA",
+  "copyright": "CORDINA 2024",
+  "item": [
+    {
+      "linkId": "1",
+      "text": "Child Information",
+      "type": "group",
+      "item": [
+        {
+          "linkId": "1.1",
+          "text": "Child with Problem Behavior(s)",
+          "type": "string",
+          "id": "id-143"
+        },
+        {
+          "linkId": "1.2",
+          "text": "Date of Interview",
+          "type": "date",
+          "id": "id-144"
+        },
+        {
+          "linkId": "1.3",
+          "text": "Age",
+          "type": "integer",
+          "id": "id-145"
+        },
+        {
+          "linkId": "1.4",
+          "text": "Sex",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "M",
+                "display": "Male"
+              },
+              "id": "id-147"
+            },
+            {
+              "valueCoding": {
+                "code": "F",
+                "display": "Female"
+              },
+              "id": "id-148"
+            }
+          ],
+          "id": "id-146"
+        }
+      ],
+      "id": "id-142"
+    },
+    {
+      "linkId": "1.5",
+      "text": "Interviewer",
+      "type": "string",
+      "id": "id-149"
+    },
+    {
+      "linkId": "1.6",
+      "text": "Respondent(s)",
+      "type": "string",
+      "id": "id-150"
+    },
+    {
+      "linkId": "2.1.1",
+      "text": "Describe the Behavior(s)",
+      "type": "group",
+      "repeats": true,
+      "item": [
+        {
+          "id": "id-78",
+          "linkId": "q78",
+          "type": "string",
+          "text": "Name behavior:"
+        },
+        {
+          "id": "id-101",
+          "linkId": "q101",
+          "type": "string",
+          "text": "What does the behavior look like?"
+        },
+        {
+          "linkId": "2.1.1.4",
+          "text": "How the behavior intensity is?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "low",
+                "display": "Low"
+              },
+              "id": "id-153"
+            },
+            {
+              "valueCoding": {
+                "code": "medium",
+                "display": "Medium"
+              },
+              "id": "id-154"
+            },
+            {
+              "valueCoding": {
+                "code": "high",
+                "display": "High"
+              },
+              "id": "id-155"
+            }
+          ],
+          "id": "id-152"
+        },
+        {
+          "id": "id-102",
+          "linkId": "q102",
+          "type": "string",
+          "text": "How often does it occur?"
+        },
+        {
+          "id": "id-103",
+          "linkId": "q103",
+          "type": "string",
+          "text": "How long does each episode last?"
+        },
+        {
+          "id": "id-104",
+          "linkId": "q104",
+          "type": "string",
+          "text": "What are the variations or patterns in the behavior?"
+        },
+        {
+          "id": "id-105",
+          "linkId": "q105",
+          "type": "string",
+          "text": "Are there specific times or days when the behavior is more frequent?"
+        },
+        {
+          "id": "id-106",
+          "linkId": "q106",
+          "type": "string",
+          "text": "Are there specific activities or events that are more likely to trigger the behavior?"
+        }
+      ],
+      "id": "id-151"
+    },
+    {
+      "linkId": "2.2",
+      "text": "Which of the behaviors described above occur together?",
+      "type": "string",
+      "id": "id-156"
+    },
+    {
+      "id": "id-73",
+      "linkId": "g73",
+      "type": "group",
+      "text": "Antecedents and Consequences",
+      "item": [
+        {
+          "id": "id-79",
+          "linkId": "q79",
+          "type": "string",
+          "text": "What typically happens right before the behavior occurs?"
+        },
+        {
+          "id": "id-94",
+          "linkId": "q94",
+          "type": "string",
+          "text": "Are there specific triggers or events that seem to lead to the behavior?"
+        },
+        {
+          "id": "id-95",
+          "linkId": "q95",
+          "type": "string",
+          "text": "What are the person’s reactions to these triggers?"
+        },
+        {
+          "id": "id-96",
+          "linkId": "q96",
+          "type": "string",
+          "text": "What typically happens right after the behavior occurs?"
+        },
+        {
+          "id": "id-97",
+          "linkId": "q97",
+          "type": "string",
+          "text": "How do others respond to the behavior?"
+        },
+        {
+          "id": "id-98",
+          "linkId": "q98",
+          "type": "string",
+          "text": "What changes in the environment or the individual’s behavior are observed afterward?"
+        },
+        {
+          "id": "id-99",
+          "linkId": "q99",
+          "type": "string",
+          "text": "What are the common consequences of the behavior?"
+        },
+        {
+          "id": "id-100",
+          "linkId": "q100",
+          "type": "string",
+          "text": "Does the individual gain or avoid something as a result of the behavior?"
+        }
+      ]
+    },
+    {
+      "id": "id-76",
+      "linkId": "g76",
+      "type": "group",
+      "text": "Setting Events and Context",
+      "item": [
+        {
+          "id": "id-80",
+          "linkId": "q80",
+          "type": "string",
+          "text": "Are there any environmental or contextual factors that influence the behavior?"
+        },
+        {
+          "id": "id-88",
+          "linkId": "q88",
+          "type": "string",
+          "text": "Are there specific settings where the behavior is more or less likely to occur?"
+        },
+        {
+          "id": "id-89",
+          "linkId": "q89",
+          "type": "string",
+          "text": "Are there particular people present or absent when the behavior happens?"
+        },
+        {
+          "id": "id-90",
+          "linkId": "q90",
+          "type": "string",
+          "text": "How does the individual’s daily routine or lifestyle affect the behavior?"
+        },
+        {
+          "id": "id-91",
+          "linkId": "q91",
+          "type": "string",
+          "text": "Are there specific routines or changes in routines that impact the behavior?"
+        },
+        {
+          "id": "id-92",
+          "linkId": "q92",
+          "type": "string",
+          "text": "Are there any medical, emotional, or psychological factors that might contribute to the behavior?"
+        },
+        {
+          "id": "id-93",
+          "linkId": "q93",
+          "type": "string",
+          "text": "Are there any known health issues or medication changes?"
+        }
+      ]
+    },
+    {
+      "id": "id-77",
+      "linkId": "g77",
+      "type": "group",
+      "text": "Previous Interventions and Outcomes",
+      "item": [
+        {
+          "id": "id-82",
+          "linkId": "q82",
+          "type": "string",
+          "text": "What strategies or interventions have been tried in the past to address the behavior?"
+        },
+        {
+          "id": "id-83",
+          "linkId": "q83",
+          "type": "string",
+          "text": "How effective were these interventions?"
+        },
+        {
+          "id": "id-84",
+          "linkId": "q84",
+          "type": "string",
+          "text": "Were there any changes in the behavior as a result of previous interventions?"
+        },
+        {
+          "id": "id-85",
+          "linkId": "q85",
+          "type": "string",
+          "text": "What worked and what didn’t?"
+        },
+        {
+          "id": "id-86",
+          "linkId": "q86",
+          "type": "string",
+          "text": "What goals were set during previous interventions, and were they achieved?"
+        },
+        {
+          "id": "id-87",
+          "linkId": "q87",
+          "type": "string",
+          "text": "What were the criteria for success?"
+        }
+      ]
+    }
+  ]
+}

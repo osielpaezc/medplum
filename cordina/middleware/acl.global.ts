@@ -42,13 +42,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
     const chmsStore = useChmsStore();
     const userId = data.value?.user.id;
     const accessToken = data.value?.user.token;
-    
+
     if (accessToken) {
       await chmsStore.setAuthenticated(userId, accessToken);
     } else {
-      console.warn('%s - User Access token not found.', userId);
+      console.warn('%s - user access token not found.', userId);
     }
   } else {
-    console.warn('User is not logged in or CHMS is not initialized.');
+    console.warn('%s - user is not logged in or CHMS is not initialized.');
   }
 });
