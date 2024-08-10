@@ -15,9 +15,6 @@ const redirects: RouteRecordRaw[] = [
         const { data: sessionData } = useAuth()
         const userRole = sessionData.value?.user.role
 
-        const chmsStore = useChmsStore()
-        console.info(chmsStore.$state.profile)
-
         if (userRole === 'admin')
           return { name: 'dashboards-crm' }
         if (userRole === 'client')

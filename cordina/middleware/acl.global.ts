@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
    */
   if (to.meta.public) return;
 
-  const { status, data } = useAuth();
+  const { status } = useAuth();
   const isLoggedIn = status.value === 'authenticated';
 
   /*
@@ -36,19 +36,4 @@ export default defineNuxtRouteMiddleware(async (to) => {
     /* eslint-enable indent */
   }
 
-  // authenticate user with CHMS when user is login and CHMS is initialized
-  const chms = useNuxtApp().$chms;
-  if (isLoggedIn && chms?.isInitialized) {
-    const chmsStore = useChmsStore();
-    const userId = data.value?.user.id;
-    const accessToken = data.value?.user.token;
-
-    if (accessToken) {
-      await chmsStore.setAuthenticated(userId, accessToken);
-    } else {
-      console.warn('%s - user access token not found.', userId);
-    }
-  } else {
-    console.warn('%s - user is not logged in or CHMS is not initialized.');
-  }
 });

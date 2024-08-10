@@ -1,11 +1,8 @@
-import { fileURLToPath } from 'node:url'
-import svgLoader from 'vite-svg-loader'
-import vuetify from 'vite-plugin-vuetify'
+import { fileURLToPath } from 'node:url';
+import svgLoader from 'vite-svg-loader';
+import vuetify from 'vite-plugin-vuetify';
 
-const isDeployed = (
-  process.env.AUTH_ORIGIN === 'https://localhost:3000'
-  || !process.env.AUTH_ORIGIN
-) ? false : true;
+const isDeployed = process.env.AUTH_ORIGIN === 'https://localhost:3000' || !process.env.AUTH_ORIGIN ? false : true;
 const deploymentDomain = process.env.AUTH_ORIGIN || 'http://localhost:3000';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -15,22 +12,24 @@ export default defineNuxtConfig({
   devServer: {
     https: {
       key: 'server.key',
-      cert: 'server.crt'
-    }
+      cert: 'server.crt',
+    },
   },
 
-  serverDir : './server',
-  
+  serverDir: './server',
+
   app: {
     head: {
       titleTemplate: '%s - NuxtJS Admin Template',
       title: 'Materio',
 
-      link: [{
-        rel: 'icon',
-        type: 'image/x-icon',
-        href: `${process.env.NUXT_APP_BASE_URL}/favicon.ico`,
-      }],
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: `${process.env.NUXT_APP_BASE_URL}/favicon.ico`,
+        },
+      ],
     },
   },
 
@@ -38,11 +37,7 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
-  css: [
-    '@core/scss/template/index.scss',
-    '@styles/styles.scss',
-    '@/plugins/iconify/icons.css',
-  ],
+  css: ['@core/scss/template/index.scss', '@styles/styles.scss', '@/plugins/iconify/icons.css'],
 
   /*
     ❗ Please read the docs before updating runtimeConfig
@@ -57,30 +52,35 @@ export default defineNuxtConfig({
     auth0ClientSecret: process.env.AUTH0_CLIENT_SECRET,
     auth0Issuer: process.env.AUTH0_ISSUER,
     auth0Audience: process.env.AUTH0_AUDIENCE,
-    medplumBaseUrl: process.env.MEDPLUM_BASE_URL,
-    medplumClientId: process.env.MEDPLUM_CLIENT_ID,
-    medplumClientSecret: process.env.MEDPLUM_CLIENT_SECRET,
     // Public keys that are exposed to the client.
     public: {
       isDeployed,
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || '/api',
+      medplumBaseUrl: process.env.MEDPLUM_BASE_URL,
+      medplumClientId: process.env.MEDPLUM_CLIENT_ID,
+      medplumClientSecret: process.env.MEDPLUM_CLIENT_SECRET,
     },
   },
 
   components: {
-    dirs: [{
-      path: '@/@core/components',
-      pathPrefix: false,
-    }, {
-      path: '@/views/demos',
-      pathPrefix: false,
-    }, {
-      path: '~/components/global',
-      global: true,
-    }, {
-      path: '~/components',
-      pathPrefix: false,
-    }],
+    dirs: [
+      {
+        path: '@/@core/components',
+        pathPrefix: false,
+      },
+      {
+        path: '@/views/demos',
+        pathPrefix: false,
+      },
+      {
+        path: '~/components/global',
+        global: true,
+      },
+      {
+        path: '~/components',
+        pathPrefix: false,
+      },
+    ],
   },
 
   auth: {
@@ -92,17 +92,17 @@ export default defineNuxtConfig({
     },
   },
 
-  plugins: [
-    '@/plugins/casl/index.ts',
-    '@/plugins/vuetify/index.ts',
-    '@/plugins/iconify/index.ts'
-  ],
+  plugins: ['@/plugins/casl/index.ts', '@/plugins/vuetify/index.ts', '@/plugins/iconify/index.ts'],
 
   imports: {
     dirs: ['./@core/utils', './@core/composable/', './plugins/*/composables/*'],
   },
 
   hooks: {},
+
+  routeRules: {
+    '/chms/**': { proxy: 'http://localhost:8103/**' },
+  },
 
   experimental: {
     typedPages: true,
@@ -122,7 +122,7 @@ export default defineNuxtConfig({
           '@styles/*': ['../assets/styles/*'],
           '@validators': ['../@core/utils/validators'],
           '@db/*': ['../server/fake-db/*'],
-          '@api-utils/*': ['../server/utils/*']
+          '@api-utils/*': ['../server/utils/*'],
         },
       },
     },
@@ -136,7 +136,7 @@ export default defineNuxtConfig({
 
   vue: {
     compilerOptions: {
-      isCustomElement: tag => tag === 'swiper-container' || tag === 'swiper-slide',
+      isCustomElement: (tag) => tag === 'swiper-container' || tag === 'swiper-slide',
     },
   },
 
@@ -164,9 +164,7 @@ export default defineNuxtConfig({
 
     optimizeDeps: {
       exclude: ['vuetify'],
-      entries: [
-        './**/*.vue',
-      ],
+      entries: ['./**/*.vue'],
     },
 
     plugins: [
@@ -174,7 +172,7 @@ export default defineNuxtConfig({
       vuetify({
         styles: {
           configFile: 'assets/styles/variables/_vuetify.scss',
-        }
+        },
       }),
     ],
   },
@@ -187,13 +185,7 @@ export default defineNuxtConfig({
     vueI18n: 'i18n.config.ts',
   },
 
-  modules: [
-    '@vueuse/nuxt',
-    '@nuxtjs/i18n',
-    '@nuxtjs/device',
-    '@sidebase/nuxt-auth',
-    '@pinia/nuxt'
-  ],
+  modules: ['@vueuse/nuxt', '@nuxtjs/i18n', '@nuxtjs/device', '@sidebase/nuxt-auth', '@pinia/nuxt'],
 
   compatibilityDate: '2024-07-26',
-})
+});
