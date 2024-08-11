@@ -7,34 +7,34 @@ import { hexToRgb } from '@core/utils/colorConverter'
 
 const { global } = useTheme()
 
+
 // ℹ️ Sync current theme with initial loader theme
 initCore()
 initConfigStore()
+initChmsStore()
 
 const configStore = useConfigStore()
 const { isMobile } = useDevice()
 if (isMobile)
   configStore.appContentLayoutNav = 'vertical'
 
-const { status, data: sessionData } = useAuth();
-const { $chms } = useNuxtApp()
 
-watch((status), (nval, oval) => {
-  if (nval == 'unauthenticated') {
-    console.info('user not authenticated');
-    return
-  }
+// watch((status), (nval, oval) => {
+//   if (nval == 'unauthenticated') {
+//     console.info('user not authenticated');
+//     return
+//   }
 
-  const userId = sessionData.value?.user.id
-  const accessToken = sessionData.value?.user.token
-  $chms.authorize(userId, accessToken)
-  .then((resp) => {
-    console.log(resp)
-  })
+//   const userId = sessionData.value?.user.id
+//   const accessToken = sessionData.value?.user.token
+//   $chms.authorize(userId, accessToken)
+//   .then((resp) => {
+//     console.log(resp)
+//   })
 
 
-  console.info('user authenticated')
-})
+//   console.info('user authenticated')
+// })
 
 
 </script>

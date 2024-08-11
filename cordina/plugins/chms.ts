@@ -14,19 +14,15 @@ export default defineNuxtPlugin(() => {
     // },
   } as MedplumClientOptions;
 
-  console.info(options)
-
   if (!medplum.value) medplum.value = new MedplumClient(options);
 
-  const authorize = async (externalId: string, accessToken: string) => {
+  const authorize = async (userId: string, accessToken: string) => {
     return await instance.value.exchangeExternalAccessToken(accessToken);
   };
 
   return {
     provide: {
-      chms: {
-        authorize
-      },
+      chms: instance.value
     },
   };
 });
