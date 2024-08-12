@@ -1,9 +1,9 @@
 import { MedplumClient, type MedplumClientOptions } from '@medplum/core';
+import type { Bundle, SubscriptionStatus } from '@medplum/fhirtypes';
 
 export default defineNuxtPlugin(() => {
   
   const medplum = ref<MedplumClient | null>(null);
-  const instance = computed(() => medplum.value);
 
   const options = {
     baseUrl: useRuntimeConfig().public.medplumBaseUrl,
@@ -19,13 +19,15 @@ export default defineNuxtPlugin(() => {
 
   if (!medplum.value) medplum.value = new MedplumClient(options);
 
-  const authorize = async (userId: string, accessToken: string) => {
-    return await instance.value?.exchangeExternalAccessToken(accessToken);
-  };
+  const masterEmitter = medplum.value.getMasterSubscriptionEmitter();
+
+  masterEmitter.addEventListener('heartbeat', (bundle: Bundle<SubscriptionStatus>) => {
+    console.log(bundle?.entry?.[0]?.resource); // A `SubscriptionStatus` of type `heartbeat`
+  });
 
   return {
     provide: {
-      chms: instance.value
+      chms: computed(() => medplum.value).value as MedplumClient
     },
   };
 });

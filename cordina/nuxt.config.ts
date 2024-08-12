@@ -102,6 +102,11 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/chms/**': { proxy: 'http://localhost:8103/**' },
+    '/chms/ws/**': {
+        proxy: 'ws://localhost:8103/ws/**',
+        ws: true,
+        rewriteWsOrigin: true,
+      },
   },
 
   experimental: {

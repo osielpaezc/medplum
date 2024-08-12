@@ -1,5 +1,6 @@
 import { storeToRefs } from 'pinia';
-import type { MedplumClientEventMap, ProfileResource } from '@medplum/core';
+import type { LoginState, MedplumClientEventMap, ProfileResource } from '@medplum/core';
+import type { AccessPolicy, UserConfiguration } from '@medplum/fhirtypes';
 
 // SECTION Store
 export const useChmsStore = defineStore('Cordina HMS', () => {
@@ -8,17 +9,19 @@ export const useChmsStore = defineStore('Cordina HMS', () => {
   /// --------------------
   //  store state
   /// --------------------
+  const userId = ref<string | undefined>(undefined);
   const isUserAuthenticated = ref<boolean>(false);
   const isUserAuthorized = ref<boolean>(false);
-  // const isUserPserrojectAdmin = ref($chms?.isProjectAdmin());
-  // const isUserSuperAdmin = ref($chms?.isSuperAdmin());
+  const activeAccount = ref<LoginState | null>(null);
+  const otherAccounts = ref<LoginState[] | null>(null);
+  const accessPolicy = ref<AccessPolicy | null>(null);
   const profile = ref<ProfileResource | null>(null);
-  const userId = ref<string | undefined>(undefined);
-
+  const userConfiguration = ref<UserConfiguration | null>(null);
 
   /// --------------------
   //  store getters
   /// --------------------
+
   // const theme = cookieRef('theme', themeConfig.app.theme)
 
   /// --------------------
@@ -34,16 +37,28 @@ export const useChmsStore = defineStore('Cordina HMS', () => {
     isUserAuthenticated.value = isLogedIn;
   };
 
-  const getAuthorized = async (accessToken: string): Promise<void> => {
+  const getAuthorized = async (accessToken: string) => {
     await $chms
-      ?.exchangeExternalAccessToken(accessToken)
-      .then((resp) => {
+      .exchangeExternalAccessToken(accessToken)
+      .then((prof: ProfileResource) => {
         console.info('CHMS have successfully authorized user %s', userId.value);
+        console.debug('CHMS authorized user profile.', prof)
         isUserAuthorized.value = true;
-        profile.value = resp as ProfileResource;
+        profile.value = prof;
+      }).then(() => {
+        activeAccount.value = $chms.getActiveLogin()
       })
-      .catch((err) => {
-        console.info('CHMS could not authorized user %s, becouse %s', userId.value, (err as Error).message);
+      .then(() => {
+        otherAccounts.value = $chms.getLogins()
+      })
+      .then(() => {
+        accessPolicy.value = $chms.getAccessPolicy()
+      })
+      .then(() => {
+        userConfiguration.value = $chms.getUserConfiguration()
+      })
+      .catch((err: Error) => {
+        console.info('CHMS could not authorized user %s, becouse %s', userId.value, err.message);
       });
   };
 
@@ -52,7 +67,7 @@ export const useChmsStore = defineStore('Cordina HMS', () => {
   /// --------------------
   watch(
     isUserAuthenticated,
-    async (val) => {
+    async (val: boolean) => {
       if (val) {
         const { data: sessionData } = useAuth();
         userId.value = sessionData.value?.user.id;
@@ -73,8 +88,10 @@ export const useChmsStore = defineStore('Cordina HMS', () => {
     setLoggedIn,
     isUserAuthenticated,
     isUserAuthorized,
-    isProjectAdmin: $chms?.isProjectAdmin(),
-    isSuperAdmin: $chms?.isSuperAdmin(),
+    activeAccount,
+    otherAccounts,
+    accessPolicy,
+    userConfiguration,
     profile,
   };
 });
@@ -86,11 +103,11 @@ export const initChmsStore = () => {
   const { $chms } = useNuxtApp();
   const { setLoggedIn } = useChmsStore();
 
-  watch(status, (_status) => setLoggedIn(_status == 'authenticated'));
+  watch(status, (_status: string) => setLoggedIn(_status == 'authenticated'));
 
   // Event listener function
   function eventListener(type: any): void {
-    console.info('medplum event `%s`', type);
+    console.info('medplum event: ', type);
   }
 
   // List of events to track
